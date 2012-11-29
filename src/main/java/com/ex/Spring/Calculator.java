@@ -5,8 +5,19 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Calculator {
+
 	public Integer calcSum(String filepath) throws IOException{
-		BufferedReaderCallback sumCallback = 
+		LineCallback sumCallback = 
+				new LineCallback() {
+						
+					@Override
+					public Integer doSomethingWithLine(String line, Integer value){
+						// TODO Auto-generated method stub
+					return value + Integer.valueOf(line);
+					}};
+			return lineReadTemplate(filepath, sumCallback, 0);
+		}
+/*		BufferedReaderCallback sumCallback = 
 			new BufferedReaderCallback() {
 					
 				@Override
@@ -21,11 +32,22 @@ public class Calculator {
 				}
 		};
 		return fileReadTemplate(filepath, sumCallback);
-	}
-	
+*/
+		
 	
 	public Integer calcMultiply(String filepath)throws IOException{
-		BufferedReaderCallback multiplyCallback = 
+		LineCallback multiplyCallback = 
+				new LineCallback() {
+						
+					@Override
+					public Integer doSomethingWithLine(String line, Integer value){
+						// TODO Auto-generated method stub
+						return value *Integer.valueOf(line);
+					}
+			};
+			return lineReadTemplate(filepath, multiplyCallback, 1);
+	}
+/*		BufferedReaderCallback multiplyCallback = 
 				new BufferedReaderCallback() {
 						
 					@Override
@@ -41,7 +63,7 @@ public class Calculator {
 			};
 			return fileReadTemplate(filepath, multiplyCallback);
 		}
-	
+*/
 	
 	
 	//템플릿 메소드
