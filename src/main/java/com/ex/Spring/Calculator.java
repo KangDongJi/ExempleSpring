@@ -23,12 +23,58 @@ public class Calculator {
 		return fileReadTemplate(filepath, sumCallback);
 	}
 	
+	
+	public Integer calcMultiply(String filepath)throws IOException{
+		BufferedReaderCallback multiplyCallback = 
+				new BufferedReaderCallback() {
+						
+					@Override
+					public Integer doSomethingWithReader(BufferedReader br) throws IOException {
+						// TODO Auto-generated method stub
+						Integer multiply = 1;
+						String line = null;
+						while((line = br.readLine())!= null){
+							multiply *= Integer.valueOf(line);
+						}
+						return multiply;
+					}
+			};
+			return fileReadTemplate(filepath, multiplyCallback);
+		}
+	
+	
+	
+	//템플릿 메소드
 	public Integer fileReadTemplate(String filepath, BufferedReaderCallback callback)throws IOException{
 		BufferedReader br = null;
 		try{
 			br = new BufferedReader(new FileReader(filepath));
 			int ret = callback.doSomethingWithReader(br);
 			return ret;
+		}
+		catch(IOException e ){
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally{
+			if(br!=null){
+				try{br.close();}
+				catch(IOException e){System.out.println(e.getMessage());}
+			}
+		}
+	}
+	
+	
+	public Integer lineReadTemplate(String filepath, LineCallback callback, int initVal)throws IOException{
+		BufferedReader br = null;
+		try{
+			br = new BufferedReader(new FileReader(filepath));
+			int res = initVal;
+			String line = null;
+			while ((line=br.readLine())!=null){
+				res = callback.doSomethingWithLine(line, res);
+			}
+			return res;
 		}
 		catch(IOException e ){
 			System.out.println(e.getMessage());
