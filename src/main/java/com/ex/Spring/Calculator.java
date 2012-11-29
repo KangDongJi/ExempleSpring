@@ -5,8 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Calculator {
-
-	public Integer calcSum(String filepath) throws IOException{
+	public String concatenate(String filepath) throws IOException{
+		LineCallback<String> concatenateCallback = new LineCallback<String>(){
+			public String doSomethingWithLine (String line, String value){
+				return value+line;
+			}};
+			return lineReadTemplate(filepath, concatenateCallback, "");
+	}
+/* public Integer calcSum(String filepath) throws IOException{
 		LineCallback sumCallback = 
 				new LineCallback() {
 						
@@ -17,7 +23,7 @@ public class Calculator {
 					}};
 			return lineReadTemplate(filepath, sumCallback, 0);
 		}
-/*		BufferedReaderCallback sumCallback = 
+		BufferedReaderCallback sumCallback = 
 			new BufferedReaderCallback() {
 					
 				@Override
@@ -32,7 +38,7 @@ public class Calculator {
 				}
 		};
 		return fileReadTemplate(filepath, sumCallback);
-*/
+
 		
 	
 	public Integer calcMultiply(String filepath)throws IOException{
@@ -47,6 +53,7 @@ public class Calculator {
 			};
 			return lineReadTemplate(filepath, multiplyCallback, 1);
 	}
+	*/
 /*		BufferedReaderCallback multiplyCallback = 
 				new BufferedReaderCallback() {
 						
@@ -64,6 +71,7 @@ public class Calculator {
 			return fileReadTemplate(filepath, multiplyCallback);
 		}
 */
+	
 	
 	
 	//템플릿 메소드
@@ -87,8 +95,28 @@ public class Calculator {
 	}
 	
 	
-	public Integer lineReadTemplate(String filepath, LineCallback callback, int initVal)throws IOException{
+	public <T> T lineReadTemplate(String filepath, LineCallback<T> callback, T initVal)throws IOException{
 		BufferedReader br = null;
+		try{
+			br = new BufferedReader(new FileReader(filepath));
+			T res = initVal;
+			String line = null;
+			while ((line=br.readLine())!=null){
+				res = callback.doSomethingWithLine(line, res);
+			}
+			return res;
+		}
+		catch(IOException e ){
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally{
+			if(br!=null){
+				try{br.close();}
+				catch(IOException e){System.out.println(e.getMessage());}
+			}
+		}
+/*		BufferedReader br = null;
 		try{
 			br = new BufferedReader(new FileReader(filepath));
 			int res = initVal;
@@ -108,5 +136,10 @@ public class Calculator {
 				catch(IOException e){System.out.println(e.getMessage());}
 			}
 		}
+*/
 	}
-}
+}	
+
+
+
+
